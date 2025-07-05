@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chest Manat Oyunu</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: url('https://i.postimg.cc/xj7b9ZP5/Screenshot-2025-07-05-17-35-41-416-com-whatsapp.jpg') no-repeat center center fixed;
+      background-size: cover;
+      text-align: center;
+      color: #fff;
+    }
+    #chestBtn {
+      margin-top: 80px;
+      width: 160px;
+      height: 160px;
+      background: url('https://i.postimg.cc/JnMLLRsg/1751721558472.png') no-repeat center;
+      background-size: contain;
+      border: none;
+      cursor: pointer;
+    }
+    #balanceBox {
+      margin: 20px auto;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 12px;
+      width: 80%;
+      font-size: 18px;
+    }
+    .bottom-buttons {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+    }
+    .bottom-buttons button {
+      padding: 10px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+      cursor: pointer;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.9);
+      padding: 20px;
+      border-radius: 12px;
+      z-index: 999;
+      display: none;
+    }
+    .popup h3 {
+      margin-top: 0;
+      color: gold;
+    }
+    #chestAnimation {
+      width: 150px;
+      height: 150px;
+      background: url('https://i.postimg.cc/ZYfhGt47/1751721501230.png') no-repeat center;
+      background-size: contain;
+      margin: 20px auto;
+      display: none;
+      animation: openChest 1.5s ease forwards;
+    }
+    @keyframes openChest {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div id="balanceBox">Balans: <span id="balance">0.0000</span> AZN</div>
+  <button id="chestBtn"></button>
+  <div id="chestAnimation"></div>  <div class="bottom-buttons">
+    <button onclick="showPopup('balancePopup')">Balans</button>
+    <button onclick="showPopup('invitePopup')">Dəvət Et</button>
+    <button onclick="showPopup('leaderboardPopup')">Leaderboard</button>
+  </div>  <!-- Popuplar -->  <div id="balancePopup" class="popup">
+    <h3>Balans Məlumatı</h3>
+    <p>Balans: <span id="popupBalance">0.0000</span> AZN</p>
+    <p>Minimum çıxarış 3 AZN-dir</p>
+    <button id="withdrawBtn" disabled>Çıxarış Et</button>
+    <p id="withdrawInfo" style="display:none">Adminə yazın: <a href="https://t.me/Mansio44">@Mansio44</a></p>
+    <button onclick="hidePopup('balancePopup')">Bağla</button>
+  </div>  <div id="invitePopup" class="popup">
+    <h3>Dostunu Dəvət Et</h3>
+    <p>Linkin:</p>
+    <input type="text" id="refLink" readonly style="width:90%; padding:6px" />
+    <button onclick="copyRef()">Kopyala</button>
+    <button onclick="hidePopup('invitePopup')">Bağla</button>
+  </div>  <div id="leaderboardPopup" class="popup">
+    <h3>Ən Yaxşı 10 Oyunçu</h3>
+    <ol id="leaderboardList">
+      <li>@user1 - 4.20 AZN</li>
+      <li>@user2 - 3.60 AZN</li>
+      <li>@user3 - 3.45 AZN</li>
+      <li>@user4 - 3.10 AZN</li>
+      <li>@user5 - 2.95 AZN</li>
+    </ol>
+    <button onclick="hidePopup('leaderboardPopup')">Bağla</button>
+  </div>  <script>
+    let balance = 0;
+    let dailyLimit = 50;
+    let openedToday = 0;
+    const balanceEl = document.getElementById('balance');
+    const chestBtn = document.getElementById('chestBtn');
+    const chestAnim = document.getElementById('chestAnimation');
+    const popupBalance = document.getElementById('popupBalance');
+    const withdrawBtn = document.getElementById('withdrawBtn');
+    const withdrawInfo = document.getElementById('withdrawInfo');
+
+    // Fake ID for referral link
+    const userId = Math.floor(Math.random() * 100000);
+    document.getElementById('refLink').value = `https://t.me/ChestManat_bot?start=${userId}`;
+
+    chestBtn.onclick = () => {
+      if (openedToday >= dailyLimit) {
+        alert('Günlük limit bitib. Sabah yenidən cəhd edin.');
+        return;
+      }
+
+      openedToday++;
+      chestBtn.disabled = true;
+      setTimeout(() => {
+        const reward = (Math.random() * (0.0008 - 0.0005) + 0.0005).toFixed(4);
+        balance += parseFloat(reward);
+        balance = parseFloat(balance.toFixed(4));
+        balanceEl.innerText = balance.toFixed(4);
+        popupBalance.innerText = balance.toFixed(4);
+
+        chestAnim.style.display = 'block';
+        setTimeout(() => chestAnim.style.display = 'none', 1800);
+
+        chestBtn.disabled = false;
+        if (balance >= 3) {
+          withdrawBtn.disabled = false;
+        }
+      }, 2500);
+    };
+
+    withdrawBtn.onclick = () => {
+      withdrawInfo.style.display = 'block';
+    };
+
+    function showPopup(id) {
+      document.getElementById(id).style.display = 'block';
+    }
+
+    function hidePopup(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function copyRef() {
+      const input = document.getElementById('refLink');
+      input.select();
+      document.execCommand('copy');
+      alert('Link kopyalandı!');
+    }
+  </script></body>
+</html>
