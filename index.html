@@ -1,168 +1,167 @@
 <!DOCTYPE html><html lang="az">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chest Manat Oyunu</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChestManat Oyunu</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: sans-serif;
       background: url('https://i.postimg.cc/xj7b9ZP5/Screenshot-2025-07-05-17-35-41-416-com-whatsapp.jpg') no-repeat center center fixed;
       background-size: cover;
-      text-align: center;
-      color: #fff;
-    }
-    #chestBtn {
-      margin-top: 80px;
-      width: 160px;
-      height: 160px;
-      background: url('https://i.postimg.cc/JnMLLRsg/1751721558472.png') no-repeat center;
-      background-size: contain;
-      border: none;
-      cursor: pointer;
-    }
-    #balanceBox {
-      margin: 20px auto;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 12px;
-      width: 80%;
-      font-size: 18px;
-    }
-    .bottom-buttons {
-      position: fixed;
-      bottom: 10px;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-    }
-    .bottom-buttons button {
-      padding: 10px 15px;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      background: #fff;
-      color: #000;
-      cursor: pointer;
-    }
-    .popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0,0,0,0.9);
-      padding: 20px;
-      border-radius: 12px;
-      z-index: 999;
-      display: none;
-    }
-    .popup h3 {
-      margin-top: 0;
-      color: gold;
-    }
-    #chestAnimation {
-      width: 150px;
-      height: 150px;
-      background: url('https://i.postimg.cc/ZYfhGt47/1751721501230.png') no-repeat center;
-      background-size: contain;
-      margin: 20px auto;
-      display: none;
-      animation: openChest 1.5s ease forwards;
-    }
-    @keyframes openChest {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
+      overflow: hidden;
+    }#balanceDisplay {
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+#chestButton {
+  display: block;
+  margin: 100px auto 20px;
+  width: 100px;
+  height: 100px;
+  background: url('https://i.postimg.cc/JnMLLRsg/1751721558472.png') no-repeat center center;
+  background-size: contain;
+  border: none;
+  cursor: pointer;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from { filter: drop-shadow(0 0 5px yellow); }
+  to { filter: drop-shadow(0 0 20px gold); }
+}
+
+#openChestBtn {
+  display: block;
+  margin: 0 auto;
+  padding: 12px 25px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  background: gold;
+  color: black;
+  cursor: pointer;
+  box-shadow: 0 0 10px yellow;
+  animation: glow 1s infinite alternate;
+}
+
+#menuButtons {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+.menuBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 10px;
+  background: gold;
+  color: black;
+  border: none;
+  cursor: pointer;
+  animation: glow 1s infinite alternate;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.9);
+  color: white;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popup h2 {
+  margin-bottom: 20px;
+}
+
+.closePopup {
+  margin-top: 30px;
+  padding: 10px 20px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
   </style>
 </head>
-<body>
-  <div id="balanceBox">Balans: <span id="balance">0.0000</span> AZN</div>
-  <button id="chestBtn"></button>
-  <div id="chestAnimation"></div>  <div class="bottom-buttons">
-    <button onclick="showPopup('balancePopup')">Balans</button>
-    <button onclick="showPopup('invitePopup')">Dəvət Et</button>
-    <button onclick="showPopup('leaderboardPopup')">Leaderboard</button>
-  </div>  <!-- Popuplar -->  <div id="balancePopup" class="popup">
-    <h3>Balans Məlumatı</h3>
-    <p>Balans: <span id="popupBalance">0.0000</span> AZN</p>
-    <p>Minimum çıxarış 3 AZN-dir</p>
-    <button id="withdrawBtn" disabled>Çıxarış Et</button>
-    <p id="withdrawInfo" style="display:none">Adminə yazın: <a href="https://t.me/Mansio44">@Mansio44</a></p>
-    <button onclick="hidePopup('balancePopup')">Bağla</button>
-  </div>  <div id="invitePopup" class="popup">
-    <h3>Dostunu Dəvət Et</h3>
-    <p>Linkin:</p>
-    <input type="text" id="refLink" readonly style="width:90%; padding:6px" />
-    <button onclick="copyRef()">Kopyala</button>
-    <button onclick="hidePopup('invitePopup')">Bağla</button>
-  </div>  <div id="leaderboardPopup" class="popup">
-    <h3>Ən Yaxşı 10 Oyunçu</h3>
-    <ol id="leaderboardList">
-      <li>@user1 - 4.20 AZN</li>
-      <li>@user2 - 3.60 AZN</li>
-      <li>@user3 - 3.45 AZN</li>
-      <li>@user4 - 3.10 AZN</li>
-      <li>@user5 - 2.95 AZN</li>
-    </ol>
-    <button onclick="hidePopup('leaderboardPopup')">Bağla</button>
-  </div>  <script>
-    let balance = 0;
-    let dailyLimit = 50;
-    let openedToday = 0;
-    const balanceEl = document.getElementById('balance');
-    const chestBtn = document.getElementById('chestBtn');
-    const chestAnim = document.getElementById('chestAnimation');
-    const popupBalance = document.getElementById('popupBalance');
-    const withdrawBtn = document.getElementById('withdrawBtn');
-    const withdrawInfo = document.getElementById('withdrawInfo');
+<body><div id="balanceDisplay">Balans: 0.0000 AZN</div>
+<button id="chestButton"></button>
+<button id="openChestBtn">Sandığı Aç</button><div id="menuButtons">
+  <button class="menuBtn" onclick="togglePopup('balancePopup')">Balans</button>
+  <button class="menuBtn" onclick="togglePopup('invitePopup')">Dəvət Et</button>
+  <button class="menuBtn" onclick="togglePopup('leaderboardPopup')">Leaderboard</button>
+</div><div id="balancePopup" class="popup">
+  <h2>Balans: <span id="popupBalance">0.0000</span> AZN</h2>
+  <p>Minimum çıxarış 3 AZN-dir</p>
+  <button onclick="withdraw()">Çıxarış Et</button>
+  <button class="closePopup" onclick="togglePopup('balancePopup')">Bağla</button>
+</div><div id="invitePopup" class="popup">
+  <h2>Dəvət Linkin:</h2>
+  <p id="inviteLink">https://t.me/ChestManat_bot?start=123456</p>
+  <button onclick="copyLink()">Kopyala</button>
+  <button class="closePopup" onclick="togglePopup('invitePopup')">Bağla</button>
+</div><div id="leaderboardPopup" class="popup">
+  <h2>Ən Yaxşı 10 Oyunçu</h2>
+  <ol id="leaderboardList">
+    <li>@user1 - 15 AZN</li>
+    <li>@user2 - 13 AZN</li>
+    <li>@user3 - 12 AZN</li>
+  </ol>
+  <button class="closePopup" onclick="togglePopup('leaderboardPopup')">Bağla</button>
+</div><script>
+  let balance = 0;
+  let chestOpenCount = 0;
+  const maxDailyOpens = 50;
 
-    // Fake ID for referral link
-    const userId = Math.floor(Math.random() * 100000);
-    document.getElementById('refLink').value = `https://t.me/ChestManat_bot?start=${userId}`;
+  function togglePopup(id) {
+    const popup = document.getElementById(id);
+    popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
+    if (id === 'balancePopup') {
+      document.getElementById('popupBalance').innerText = balance.toFixed(4);
+    }
+  }
 
-    chestBtn.onclick = () => {
-      if (openedToday >= dailyLimit) {
-        alert('Günlük limit bitib. Sabah yenidən cəhd edin.');
-        return;
-      }
+  function copyLink() {
+    const link = document.getElementById('inviteLink').innerText;
+    navigator.clipboard.writeText(link);
+    alert('Link kopyalandı!');
+  }
 
-      openedToday++;
-      chestBtn.disabled = true;
-      setTimeout(() => {
-        const reward = (Math.random() * (0.0008 - 0.0005) + 0.0005).toFixed(4);
-        balance += parseFloat(reward);
-        balance = parseFloat(balance.toFixed(4));
-        balanceEl.innerText = balance.toFixed(4);
-        popupBalance.innerText = balance.toFixed(4);
+  function withdraw() {
+    if (balance >= 3) {
+      alert("Zəhmət olmasa çıxarış üçün @Mansio44 ilə əlaqə saxlayın");
+    } else {
+      alert("Minimum çıxarış məbləği 3 AZN-dir");
+    }
+  }
 
-        chestAnim.style.display = 'block';
-        setTimeout(() => chestAnim.style.display = 'none', 1800);
-
-        chestBtn.disabled = false;
-        if (balance >= 3) {
-          withdrawBtn.disabled = false;
-        }
-      }, 2500);
-    };
-
-    withdrawBtn.onclick = () => {
-      withdrawInfo.style.display = 'block';
-    };
-
-    function showPopup(id) {
-      document.getElementById(id).style.display = 'block';
+  document.getElementById('openChestBtn').addEventListener('click', () => {
+    if (chestOpenCount >= maxDailyOpens) {
+      alert("Günlük reklam limiti bitdi. Sabah yenidən yoxlayın.");
+      return;
     }
 
-    function hidePopup(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-
-    function copyRef() {
-      const input = document.getElementById('refLink');
-      input.select();
-      document.execCommand('copy');
-      alert('Link kopyalandı!');
-    }
-  </script></body>
+    const amount = (Math.random() * (0.0008 - 0.0005) + 0.0005).toFixed(4);
+    balance += parseFloat(amount);
+    chestOpenCount++;
+    document.getElementById('balanceDisplay').innerText = `Balans: ${balance.toFixed(4)} AZN`;
+    alert(`Sandıqdan ${amount} AZN qazandın!`);
+  });
+</script></body>
 </html>
